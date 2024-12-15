@@ -1,13 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useContext } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 
-import { Button } from '../components/Button';
 import { RootStackParamList } from '../navigation';
 
 import { TasksContext } from '~/Providers';
-import { TaskItem, Separator } from '~/components';
+import { TaskItem, Separator, PlusButton } from '~/components';
+import { Screens } from '~/constants/screens';
 import { Task } from '~/types';
 
 type TaskListScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TaskList'>;
@@ -18,14 +18,14 @@ const TaskList = () => {
   const tasks = tasksContext?.tasks || [];
 
   const onTaskPress = (task: Task) => {
-    navigation.navigate('EditTask', {
+    navigation.navigate(Screens.EditTask, {
       task,
       editMode: true,
     });
   };
 
   const onAddTaskPress = () => {
-    navigation.navigate('EditTask', { editMode: false });
+    navigation.navigate(Screens.EditTask, { editMode: false });
   };
 
   return (
@@ -34,15 +34,11 @@ const TaskList = () => {
         data={tasks}
         renderItem={({ item }) => <TaskItem data={item} onPress={onTaskPress} />}
         ItemSeparatorComponent={() => <Separator />}
+        contentContainerStyle={styles.contentContainer}
       />
-      {/* <Button
-        onPress={() => {
-         tasksContext?.setTasks([...tasks, { id: 1, userId: 1, todo: 'Test todo', completed: false}])
-        }
-      }
-        title="Add task"
-      /> */}
-      <Button onPress={onAddTaskPress} title="Add task" />
+      <Pressable onPress={onAddTaskPress}>
+        <PlusButton />
+      </Pressable>
     </View>
   );
 };
@@ -50,7 +46,10 @@ const TaskList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 16,
+  },
+  contentContainer: {
+    paddingVertical: 10,
   },
 });
 

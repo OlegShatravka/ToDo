@@ -2,9 +2,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
-import { BackButton } from '../components/BackButton';
 import { EditTaskScreen, TaskList } from '../screens';
+
 import { Providers } from '~/Providers';
+import { Screens } from '~/constants/screens';
 import { Task } from '~/types';
 
 export type RootStackParamList = {
@@ -20,13 +21,19 @@ export default function RootStack() {
     <NavigationContainer>
       <Providers>
         <SafeAreaView style={styles.container}>
-          <Stack.Navigator initialRouteName="TaskList">
-            <Stack.Screen name="TaskList" component={TaskList} />
+          <Stack.Navigator initialRouteName={Screens.TaskList}>
             <Stack.Screen
-              name="EditTask"
+              name={Screens.TaskList}
+              component={TaskList}
+              options={() => ({
+                title: 'To Do List',
+              })}
+            />
+            <Stack.Screen
+              name={Screens.EditTask}
               component={EditTaskScreen}
-              options={({ navigation }) => ({
-                headerLeft: () => <BackButton onPress={navigation.goBack} />,
+              options={() => ({
+                title: 'Details',
               })}
             />
           </Stack.Navigator>
