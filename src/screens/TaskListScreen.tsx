@@ -1,21 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useContext } from 'react';
 import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 
 import { RootStackParamList } from '../navigation';
 
-import { TasksContext } from '~/Providers';
 import { TaskItem, Separator, PlusButton } from '~/components';
 import { Screens } from '~/constants/screens';
+import { useTasks } from '~/hooks/useTasks';
 import { Task } from '~/types';
 
 type TaskListScreenNavigationProps = StackNavigationProp<RootStackParamList, 'TaskList'>;
 
 const TaskList = () => {
   const navigation = useNavigation<TaskListScreenNavigationProps>();
-  const tasksContext = useContext(TasksContext);
-  const tasks = tasksContext?.tasks || [];
+  const { tasks } = useTasks();
 
   const onTaskPress = (task: Task) => {
     navigation.navigate(Screens.EditTask, {

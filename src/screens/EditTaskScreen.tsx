@@ -1,14 +1,13 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 import { Button } from '../components/Button';
 import { RootStackParamList } from '../navigation';
 
-import { TasksContext } from '~/Providers';
 import { Separator } from '~/components';
 import { DeleteButton } from '~/components/DeleteButton';
-import { Task } from '~/types';
+import { useTasks } from '~/hooks/useTasks';
 
 type EditTaskScreenRouteProp = RouteProp<RootStackParamList, 'EditTask'>;
 
@@ -17,56 +16,26 @@ const EditTaskScreen = () => {
   const navigation = useNavigation();
   const { task, editMode } = router.params;
 
-  const tasksContext = useContext(TasksContext);
-
   const [taskText, setTaskText] = useState(task?.todo || '');
-  const tasks = tasksContext?.tasks || [];
+  const { createTask, editTask, deleteTask, completeTask } = useTasks();
 
   const onCreatePress = () => {
-    const lastTask = tasks.at(-1);
-    const id = lastTask ? lastTask.id + 1 : 1;
-
-    tasksContext?.setTasks([...tasks, { id, userId: 1, todo: taskText, completed: false }]);
+    createTask(taskText);
     navigation.goBack();
   };
 
   const onEditPress = () => {
-    const filteredTasks = tasks.filter((item) => item.id !== task?.id);
-    const updatedTask = {
-      id: task!.id,
-      todo: taskText,
-      completed: task!.completed,
-      userId: task!.userId,
-    };
-    const updatedTasks: Task[] = [...filteredTasks, updatedTask];
-
-    tasksContext?.setTasks(updatedTasks);
+    editTask(task!.id, taskText);
     navigation.goBack();
   };
 
   const onCompleteTask = () => {
-    const updatedTasks = tasks.map((item) => {
-      if (item.id !== task!.id) {
-        return item;
-      }
-
-      return {
-        id: task!.id,
-        todo: task!.todo,
-        completed: true,
-        userId: task!.userId,
-      };
-    });
-
-    tasksContext?.setTasks(updatedTasks);
+    completeTask(task!.id);
     navigation.goBack();
   };
 
   const onDeletePress = () => {
-    const filteredTasks = tasks.filter((item) => item.id !== task?.id);
-    const updatedTasks: Task[] = [...filteredTasks];
-
-    tasksContext?.setTasks(updatedTasks);
+    deleteTask(task!.id);
     navigation.goBack();
   };
 
