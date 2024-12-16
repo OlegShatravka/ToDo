@@ -38,6 +38,7 @@ To keep the render methods simple, several components were created:
   - `SaveButton`
   - `DeleteButton`
   - `CompleteButton`
+  - `etc.`
 
 These buttons may appear somewhat messy due to efforts to make the UI responsive. Since design isn't the primary focus, the interface was kept intentionally simple.
 
