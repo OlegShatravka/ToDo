@@ -3,7 +3,7 @@
 A simple and minimalistic app that allows users to create, edit, delete, and mark tasks as completed.
 
 ## Install dependencies
-`npx install or npm install or yarn`
+`yarn`
 
 ## Run project
 `yarn start`
