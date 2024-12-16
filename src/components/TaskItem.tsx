@@ -17,7 +17,7 @@ const TaskItem = ({ data, onPress }: TaskItemProps) => {
 
   return (
     <Pressable onPress={onItemPress}>
-      <View key={id} style={styles.container}>
+      <View key={id} style={[styles.container, completed && styles.completed]}>
         <Text style={styles.text}>{todo}</Text>
         <Gap />
         {completed && <Text style={{ fontSize: 25 }}>👌</Text>}
@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+  },
+  completed: {
+    backgroundColor: 'lightgreen',
   },
 });
 

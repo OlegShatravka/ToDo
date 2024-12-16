@@ -2,10 +2,9 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useState } from 'react';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 
-import { Button } from '../components/Button';
 import { RootStackParamList } from '../navigation';
 
-import { Separator } from '~/components';
+import { CompleteButton, SaveButton, Separator } from '~/components';
 import { DeleteButton } from '~/components/DeleteButton';
 import { useTasks } from '~/hooks/useTasks';
 
@@ -39,6 +38,14 @@ const EditTaskScreen = () => {
     navigation.goBack();
   };
 
+  const isTaskTextChanged = () => {
+    return task?.todo !== taskText;
+  };
+
+  const isSaveButtonDisabled = () => {
+    return taskText.length === 0 || !isTaskTextChanged();
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Task descriprion</Text>
@@ -54,29 +61,24 @@ const EditTaskScreen = () => {
         autoFocus={!editMode}
         editable={!task?.completed}
       />
-
-      {!task?.completed && (
-        <>
-          <Separator />
-          {task?.todo && (
-            <Button
-              title="Complete task"
-              onPress={onCompleteTask}
-              disabled={taskText.length === 0}
-              style={{ backgroundColor: 'green', width: '50%', alignSelf: 'flex-end' }}
-            />
-          )}
-          <View style={styles.gap} />
+      <>
+        <View style={styles.gap} />
+        <View style={styles.buttonsContainer}>
+          <DeleteButton onPress={onDeletePress} hidden={!editMode} />
           <View style={styles.buttonsContainer}>
-            {editMode && <DeleteButton onPress={onDeletePress} />}
-            <Button
-              title="Save"
+            <CompleteButton
+              onPress={onCompleteTask}
+              hidden={!editMode || task!.completed || isTaskTextChanged()}
+            />
+            <View style={styles.separator} />
+            <SaveButton
               onPress={editMode ? onEditPress : onCreatePress}
-              disabled={taskText.length === 0}
+              disabled={isSaveButtonDisabled()}
+              hidden={editMode && task!.completed}
             />
           </View>
-        </>
-      )}
+        </View>
+      </>
     </View>
   );
 };
@@ -102,6 +104,9 @@ const styles = StyleSheet.create({
   },
   gap: {
     flex: 1,
+  },
+  separator: {
+    width: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',

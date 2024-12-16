@@ -3,11 +3,23 @@ import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 
 
 type ButtonProps = {
   title?: string;
+  hidden: boolean;
 } & TouchableOpacityProps;
 
-export const Button = forwardRef<View, ButtonProps>(({ title, ...touchableProps }, ref) => {
+export const Button = forwardRef<View, ButtonProps>(({ title, hidden, ...touchableProps }, ref) => {
+  const { disabled } = touchableProps;
+
   return (
-    <TouchableOpacity ref={ref} {...touchableProps} style={[styles.button, touchableProps.style]}>
+    <TouchableOpacity
+      ref={ref}
+      {...touchableProps}
+      disabled={hidden}
+      style={[
+        styles.button,
+        touchableProps.style,
+        disabled && !hidden && styles.disabled,
+        hidden && styles.hidden,
+      ]}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
@@ -27,5 +39,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  hidden: {
+    opacity: 0,
   },
 });
